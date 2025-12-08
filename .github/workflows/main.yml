@@ -15,12 +15,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: PyInstaller Action
-        uses: Martin005/pyinstaller-action@dcfd75f8789130c10c0a34c3dee563e3f6906ea4
+      # 1. 設定 Python 環境
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          # 指定您的 Python 腳本名稱
-          spec: script.py
-          # 設定 PyInstaller 選項：打包成單檔、顯示主控台視窗
-          options: --onefile --console
-          # 指定上傳的執行檔名稱 (不含 .exe)
-          upload_exe_with_name: Koikatsu_Shader_Fixer
+          python-version: '3.10' # 建議指定一個穩定版本
+
+      # 2. 安裝 PyInstaller
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      # 3. 執行打包指令 (原本 Action 做的事)
+      - name: Build with PyInstaller
+        run: pyinstaller --onefile --console script.py
+
+      # 4. 上傳產物 (使用最新的 v4 版本)
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Koikatsu_Shader_Fixer  # 下載時的壓縮檔名稱
+          path: dist/script.exe    # PyInstaller 預設會將檔案放在 dist 資料夾
