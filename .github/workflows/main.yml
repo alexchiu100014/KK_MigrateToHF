@@ -3,11 +3,19 @@ name: Build EXE
 on:
   push:
     branches: [ "main", "master" ]
+    paths:
+      - 'script.py'  # 指定只有這個檔案變更時才觸發
+      # - 'requirements.txt' # 如果你有依賴檔，建議也加上這行
+  
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch:
+    paths:
+      - 'fix_shader.py'  # PR 同理
+  
+  workflow_dispatch: # 保留這個，讓你仍然可以手動強制執行
 
 jobs:
+  # ... (下方的 jobs 內容保持不變)
   build:
     runs-on: windows-latest
     
